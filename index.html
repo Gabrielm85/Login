@@ -1,11 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal</title>
+    <title>¿Quieres ser mi San Valentín?</title>
+    <style>
+        :root {
+            --primary-red: #ff4d6d;
+            --soft-pink: #fff0f3;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--soft-pink);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: var(--primary-red);
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .nombre {
+            color: #c9184a;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 20px;
+        }
+
+        .btn-love {
+            background-color: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        .btn-love:hover {
+            transform: scale(1.1);
+            background-color: #ff758f;
+        }
+
+        /* Estilo de los corazones animados */
+        .heart {
+            position: absolute;
+            color: var(--primary-red);
+            font-size: 20px;
+            user-select: none;
+            pointer-events: none;
+            animation: fly linear forwards;
+        }
+
+        @keyframes fly {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-    
+
+    <div class="container">
+        <h1>¿Quieres ser mi San Valentín?</h1>
+        <span class="nombre">Para: [Nombre]</span>
+        <button class="btn-love" onclick="lanzarCorazones()">¡Sí, acepto! ❤️</button>
+    </div>
+
+    <script>
+        function lanzarCorazones() {
+            const duration = 3000; // Cuánto tiempo se crearán corazones
+            const end = Date.now() + duration;
+
+            const interval = setInterval(() => {
+                if (Date.now() > end) {
+                    return clearInterval(interval);
+                }
+
+                crearCorazon();
+            }, 50);
+        }
+
+        function crearCorazon() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '❤️';
+            
+            // Posición inicial aleatoria en la parte inferior
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.bottom = '-5vh';
+            
+            // Tamaño y velocidad aleatoria
+            const size = Math.random() * 20 + 10 + 'px';
+            heart.style.fontSize = size;
+            
+            const duration = Math.random() * 2 + 3 + 's';
+            heart.style.animationDuration = duration;
+
+            document.body.appendChild(heart);
+
+            // Limpiar el DOM eliminando el corazón después de la animación
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+    </script>
 </body>
 </html>
