@@ -8,6 +8,7 @@
         :root {
             --primary-red: #ff4d6d;
             --soft-pink: #fff0f3;
+            --dark-pink: #c9184a;
         }
 
         body {
@@ -18,7 +19,7 @@
             align-items: center;
             min-height: 100vh;
             background-color: var(--soft-pink);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial', sans-serif;
             overflow: hidden;
         }
 
@@ -26,60 +27,74 @@
             text-align: center;
             z-index: 10;
             background: white;
-            padding: 2rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 400px;
+            width: 90%;
         }
 
         h1 {
             color: var(--primary-red);
-            font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-size: 2rem;
+            margin-bottom: 5px;
         }
 
         .nombre {
-            color: #c9184a;
-            font-weight: bold;
+            color: var(--dark-pink);
+            font-size: 1.2rem;
             display: block;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
+            font-weight: bold;
         }
 
-        .btn-love {
-            background-color: var(--primary-red);
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            align-items: center;
+            height: 60px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            font-size: 1.1rem;
             border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.2s, background-color 0.2s;
+            border: none;
+            transition: transform 0.2s;
+            font-weight: bold;
+        }
+
+        #btn-si {
+            background-color: var(--primary-red);
+            color: white;
             box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
         }
 
-        .btn-love:hover {
+        #btn-si:hover {
             transform: scale(1.1);
-            background-color: #ff758f;
         }
 
-        /* Estilo de los corazones animados */
+        #btn-no {
+            background-color: #adb5bd;
+            color: white;
+            position: absolute; /* Importante para el movimiento */
+            transition: all 0.2s ease;
+        }
+
         .heart {
             position: absolute;
             color: var(--primary-red);
-            font-size: 20px;
             user-select: none;
             pointer-events: none;
             animation: fly linear forwards;
+            z-index: 5;
         }
 
         @keyframes fly {
-            0% {
-                transform: translateY(0) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) rotate(360deg);
-                opacity: 0;
-            }
+            0% { transform: translateY(0) scale(0); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg) scale(1.5); opacity: 0; }
         }
     </style>
 </head>
@@ -88,45 +103,48 @@
     <div class="container">
         <h1>¿Quieres ser mi San Valentín?</h1>
         <span class="nombre">Para: Natalia Guadalupe Osuna Campos</span>
-        <button class="btn-love" onclick="lanzarCorazones()">¡Sí, acepto! ❤️</button>
+        
+        <div class="buttons">
+            <button id="btn-si" class="btn" onclick="aceptar()">¡Sí! ❤️</button>
+            <button id="btn-no" class="btn" onmouseover="moverBoton(this)" onclick="moverBoton(this)">No</button>
+        </div>
     </div>
 
     <script>
-        function lanzarCorazones() {
-            const duration = 3000; // Cuánto tiempo se crearán corazones
-            const end = Date.now() + duration;
+        function moverBoton(btn) {
+            // Calcula posiciones aleatorias dentro del ancho y alto de la ventana
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            
+            btn.style.left = x + "px";
+            btn.style.top = y + "px";
+        }
 
+        function aceptar() {
+            // Eliminar el botón "No" para que solo quede el festejo
+            document.getElementById('btn-no').style.display = 'none';
+            document.querySelector('h1').innerHTML = "¡Sabía que dirías que sí! 😍";
+            
+            // Lanzar ráfaga de corazones
             const interval = setInterval(() => {
-                if (Date.now() > end) {
-                    return clearInterval(interval);
-                }
-
                 crearCorazon();
-            }, 50);
+            }, 100);
+
+            // Detener la generación después de 5 segundos
+            setTimeout(() => clearInterval(interval), 5000);
         }
 
         function crearCorazon() {
             const heart = document.createElement('div');
             heart.classList.add('heart');
             heart.innerHTML = '❤️';
-            
-            // Posición inicial aleatoria en la parte inferior
             heart.style.left = Math.random() * 100 + 'vw';
             heart.style.bottom = '-5vh';
-            
-            // Tamaño y velocidad aleatoria
-            const size = Math.random() * 20 + 10 + 'px';
-            heart.style.fontSize = size;
-            
-            const duration = Math.random() * 2 + 3 + 's';
-            heart.style.animationDuration = duration;
-
+            heart.style.fontSize = Math.random() * 20 + 20 + 'px';
+            heart.style.animationDuration = Math.random() * 2 + 2 + 's';
             document.body.appendChild(heart);
-
-            // Limpiar el DOM eliminando el corazón después de la animación
-            setTimeout(() => {
-                heart.remove();
-            }, 5000);
+            
+            setTimeout(() => heart.remove(), 4000);
         }
     </script>
 </body>
